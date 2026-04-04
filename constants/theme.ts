@@ -6,7 +6,7 @@ export const colors = {
   primary: "#0F172A",
   icons: "#94A3B8",
   green: "#13EC49",
-  backgroundGreen: "#13EC49",
+  backgroundGreen: "#c3f3cf",
   white: "#FFFFFF",
 };
 

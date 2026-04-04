@@ -16,3 +16,8 @@ export interface LoginResponse {
   updatedAt: Date;
   token: string;
 }
+
+export interface UserStreakResponse {
+  streak: number;
+  lastStreakAt: Date | null;
+}
