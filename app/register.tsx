@@ -10,32 +10,54 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuth } from "../contexts/AuthContext";
+import api from "../services/api";
 import { Input } from "../components/Input";
 import { borderRadius, colors, fontSize, spacing } from "../constants/theme";
 import { Button } from "../components/Button";
 
-export default function Login() {
+export default function Register() {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
   const router = useRouter();
 
-  async function handleLogin() {
-    if (!email.trim() || !password.trim()) {
+  async function handleRegister() {
+    if (
+      !fullName.trim() ||
+      !email.trim() ||
+      !password.trim() ||
+      !confirmPassword.trim()
+    ) {
       Alert.alert("Attention", "Please fill in all the fields");
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      Alert.alert(
+        "Weak Password",
+        "Password must be at least 8 characters and contain uppercase, lowercase, and a special character",
+      );
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert("Attention", "Passwords do not match");
       return;
     }
 
     try {
       setLoading(true);
-      await signIn(email, password);
+      await api.post("/users", { fullName, email, password });
 
-      router.replace("/(authenticated)/dashboard");
+      Alert.alert("Success", "Account created successfully", [
+        { text: "Sign In", onPress: () => router.replace("/login") },
+      ]);
     } catch (error) {
       console.log(error);
-      Alert.alert("Error", "Error logging in");
+      Alert.alert("Error", "Error creating account");
     } finally {
       setLoading(false);
     }
@@ -55,14 +77,22 @@ export default function Login() {
               resizeMode="contain"
             />
 
-            <Text style={styles.brandText}>Welcome Back</Text>
+            <Text style={styles.brandText}>Create Account</Text>
 
             <Text style={styles.brandSubtitle}>
-              Manage your tasks efficiently
+              Start managing your tasks today
             </Text>
           </View>
 
           <View style={styles.formContainer}>
+            <Input
+              label="Full Name"
+              placeholder="Enter your full name..."
+              placeholderTextColor={colors.icons}
+              value={fullName}
+              onChangeText={setFullName}
+            />
+
             <Input
               label="Email"
               placeholder="Enter your email..."
@@ -70,6 +100,7 @@ export default function Login() {
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
+              autoCapitalize="none"
             />
 
             <Input
@@ -81,19 +112,32 @@ export default function Login() {
               onChangeText={setPassword}
             />
 
-            <Button title="Sign In" loading={loading} onPress={handleLogin} />
-          </View>
+            <Input
+              label="Confirm Password"
+              placeholder="Confirm your password..."
+              placeholderTextColor={colors.icons}
+              secureTextEntry={true}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+            />
 
-          <Text style={styles.footerText}>
-            Don't have an account?{" "}
-            <Text
-              style={styles.footerLink}
-              onPress={() => router.replace("/register")}
-            >
-              Create an account
-            </Text>
-          </Text>
+            <Button
+              title="Create Account"
+              loading={loading}
+              onPress={handleRegister}
+            />
+          </View>
         </ScrollView>
+
+        <Text style={styles.footerText}>
+          Already have an account?{" "}
+          <Text
+            style={styles.footerLink}
+            onPress={() => router.replace("/login")}
+          >
+            Sign in
+          </Text>
+        </Text>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -105,9 +149,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    justifyContent: "center",
     flexGrow: 1,
     paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
   },
   brandContainer: {
     alignItems: "center",
@@ -117,6 +161,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     marginBottom: spacing.md,
+    marginTop: spacing.lg,
   },
   brandText: {
     fontSize: 34,
@@ -140,6 +185,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize.md,
     textAlign: "center",
     marginTop: spacing.lg,
+    marginBottom: spacing.lg,
   },
   footerLink: {
     color: colors.green,
