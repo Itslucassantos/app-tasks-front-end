@@ -21,3 +21,16 @@ export interface UserStreakResponse {
   streak: number;
   lastStreakAt: Date | null;
 }
+
+export interface Task {
+  title: string;
+  category: string | null;
+  frequency: Frequency;
+  id: string;
+  completed: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+}
+
+export type Frequency = "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
