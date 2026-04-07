@@ -19,14 +19,12 @@ export function Button({
   style,
   ...rest
 }: ButtonProps) {
+  const isDisabled = disabled === true || loading;
+
   return (
     <TouchableOpacity
-      style={[
-        { backgroundColor: colors.backgroundGreen },
-        styles.button,
-        (disabled || loading) && styles.buttonDisabled,
-        style,
-      ]}
+      disabled={isDisabled}
+      style={[styles.button, isDisabled && styles.buttonDisabled, style]}
       {...rest}
     >
       {loading ? (
@@ -46,9 +44,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: borderRadius.md,
     paddingHorizontal: spacing.lg,
+    backgroundColor: colors.green,
   },
   buttonDisabled: {
-    opacity: 0.6,
+    backgroundColor: colors.backgroundGreen,
   },
   buttonText: {
     color: colors.primary,
