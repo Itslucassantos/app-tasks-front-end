@@ -13,6 +13,7 @@ interface AuthContextData {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  updateUser: (updatedUser: User) => Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextData);
@@ -77,6 +78,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function updateUser(updatedUser: User) {
+    try {
+      await AsyncStorage.setItem("@user:tasks", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <AuthContext
       value={{
@@ -85,6 +95,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         signIn,
         user,
         signOut,
+        updateUser,
       }}
     >
       {children}
