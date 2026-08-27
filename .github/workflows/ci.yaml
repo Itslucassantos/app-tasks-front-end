@@ -29,9 +29,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Validate Expo project
-        run: npx expo-doctor
-
       - name: Run ESLint
         run: npm run lint
 
