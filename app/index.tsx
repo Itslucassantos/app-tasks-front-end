@@ -21,7 +21,7 @@ export default function Index() {
     } else if (!signed) {
       router.replace("/login");
     }
-  }, [loading, signed, router]);
+  }, [loading, signed, segments, router]);
 
   if (loading) {
     return (

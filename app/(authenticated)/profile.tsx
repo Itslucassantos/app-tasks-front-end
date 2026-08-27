@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
 } from "react-native";
 import { colors, fontSize, spacing } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
@@ -15,7 +16,6 @@ import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import api from "../../services/api";
 import * as ImagePicker from "expo-image-picker";
-import { Platform } from "react-native";
 
 export default function Profile() {
   const { user, signOut, updateUser } = useAuth();
@@ -79,7 +79,7 @@ export default function Profile() {
         updatedUser.avatar = `${updatedUser.avatar}?t=${Date.now()}`;
       }
       await updateUser(updatedUser);
-    } catch (error) {
+    } catch {
       setPreviewUri(null);
       Alert.alert("Error", "Failed to upload avatar. Please try again.");
     } finally {
@@ -94,7 +94,7 @@ export default function Profile() {
       const response = await api.patch(`/users/${user.id}`, { fullName });
       await updateUser({ ...user, ...response.data });
       Alert.alert("Success", "Profile updated successfully!");
-    } catch (error) {
+    } catch {
       Alert.alert("Error", "Failed to update profile. Please try again.");
     } finally {
       setLoading(false);
@@ -122,7 +122,7 @@ export default function Profile() {
             try {
               await api.delete(`/users/${user.id}`);
               await signOut();
-            } catch (error) {
+            } catch {
               Alert.alert(
                 "Error",
                 "Failed to delete account. Please try again.",

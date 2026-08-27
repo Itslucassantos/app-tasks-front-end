@@ -72,7 +72,7 @@ export function FormTaskModal({
       }
       onSuccess();
       onClose();
-    } catch (error) {
+    } catch {
       Alert.alert("Error", "Failed to save task");
     } finally {
       setLoading(false);

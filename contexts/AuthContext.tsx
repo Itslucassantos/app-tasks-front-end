@@ -19,7 +19,6 @@ interface AuthContextData {
 const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [signed, setSigned] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
 
@@ -40,7 +39,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (storedToken && storedUser) {
         api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
         setUser(JSON.parse(storedUser));
-        setSigned(true);
       }
     } catch (error) {
       console.log(error);

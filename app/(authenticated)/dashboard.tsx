@@ -51,7 +51,7 @@ export default function Dashboard() {
     }
     getUserStreakDays(user.id);
     fetchTasks(0, true);
-  }, [user]);
+  }, [user, router]);
 
   async function getUserStreakDays(userId: string) {
     try {
@@ -125,7 +125,7 @@ export default function Dashboard() {
           try {
             await api.delete(`/tasks/${id}`);
             fetchTasks(0, true);
-          } catch (error) {
+          } catch {
             Alert.alert("Error", "Failed to delete task");
           }
         },
@@ -151,7 +151,7 @@ export default function Dashboard() {
         </View>
         <Text style={styles.streakTitle}>{streakDays} Day Streak!</Text>
         <Text style={styles.streakSubtitle}>
-          You're on fire, {user?.fullName}!
+          You{"'"}re on fire, {user?.fullName}!
         </Text>
       </View>
 
@@ -170,7 +170,7 @@ export default function Dashboard() {
         </Text>
       </View>
 
-      <Text style={styles.sectionTitle}>Today's Focus</Text>
+      <Text style={styles.sectionTitle}>Today{"'"}s Focus</Text>
     </>
   );
 

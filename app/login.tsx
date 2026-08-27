@@ -85,7 +85,7 @@ export default function Login() {
           </View>
 
           <Text style={styles.footerText}>
-            Don't have an account?{" "}
+            Don{"'"}t have an account?{" "}
             <Text
               style={styles.footerLink}
               onPress={() => router.replace("/register")}
